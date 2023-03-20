@@ -21,6 +21,7 @@ io.on('connection', socket => {
         addAlias(socket.id, name)
         leaderSockets.push(socket)
         sendDeviceIdList()
+        socket.emit("deviceName", deviceAlias[socket.id])
     })
 
     socket.on('follower', name => {
@@ -28,6 +29,7 @@ io.on('connection', socket => {
         addAlias(socket.id, name)
         sockets.push(socket)
         sendDeviceIdList()
+        socket.emit("deviceName", deviceAlias[socket.id])
     })
 
     socket.on('broadcast', message => {

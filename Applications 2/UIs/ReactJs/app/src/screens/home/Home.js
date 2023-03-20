@@ -26,6 +26,7 @@ export default function Home() {
     const [textAreaValue, setTextAreaValue] = useState("");
     const [deviceList, setDeviceList] = useState([broadcastTag])
     const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
+    const [deviceName, setDeviceName] = useState("Application 2");
 
     useEffect(() => {
         socket.on("connect", function() {    
@@ -35,6 +36,7 @@ export default function Home() {
                 setDeviceList([broadcastTag, ...newDeviceList])
             })         
             socket.on("input", (data) => addOutputToTextarea(data))   
+            socket.on("deviceName", (data) => setDeviceName(data))   
 
             socket.on('disconnect', (reason) => {
                 socket.disconnect()
@@ -92,7 +94,7 @@ export default function Home() {
             <AppBar position="relative">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" noWrap>
-                        Application 2
+                        {deviceName}
                     </Typography>
                 </Toolbar>
             </AppBar>

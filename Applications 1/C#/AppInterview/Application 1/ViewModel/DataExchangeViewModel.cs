@@ -20,7 +20,8 @@ namespace Application_1
             DataExchange = new DataExchange
             {
                 InputData = string.Empty,
-                OutputData = string.Empty
+                OutputData = string.Empty,
+                DeviceName = "Application 1"
             };
         }
                
@@ -44,6 +45,13 @@ namespace Application_1
 
                     DataExchange.OutputData = outputData;
                     OnPropertyChange("OutputData");
+
+                });
+
+                Client.On("deviceName", response =>
+                {
+                    DataExchange.DeviceName = response.GetValue<string>();
+                    OnPropertyChange("DeviceName");
 
                 });
 
@@ -81,6 +89,10 @@ namespace Application_1
         public string OutputData
         {
             get { return DataExchange.OutputData; }
+        }
+        public string DeviceName
+        {
+            get { return DataExchange.DeviceName; }
         }
     }
 }

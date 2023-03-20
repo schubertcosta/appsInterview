@@ -12,7 +12,7 @@
         <TextBox x:Name="textBoxOutput" Margin="222,273,218,0" Text="{Binding OutputData, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" TextWrapping="Wrap" Height="185" VerticalAlignment="Top" HorizontalScrollBarVisibility="Disabled"
           VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
         <Rectangle Height="43" Stroke="Black" VerticalAlignment="Top" Fill="#1976d2"/>
-        <Label x:Name="labelApplication" Content="Application 1" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelApplication" Content="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBoxInput" Margin="222,118,218,0" Text="{Binding InputData, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" RenderTransformOrigin="0.49,0.475" Height="84" VerticalAlignment="Top"/>
         <Label x:Name="labelInput" Content="Input" HorizontalAlignment="Left" Margin="222,87,0,0" VerticalAlignment="Top"/>
         <Label x:Name="labelOutput" Content="Output" HorizontalAlignment="Left" Margin="222,247,0,0" VerticalAlignment="Top"/>

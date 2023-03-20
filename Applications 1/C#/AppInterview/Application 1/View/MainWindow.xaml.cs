@@ -16,15 +16,13 @@ namespace Application_1
             DataContext = _dataExchangeViewModel;
         }
 
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e) =>
             await _dataExchangeViewModel.StartSocketCommunication();
-        }
 
-        private void Button_Send_Click(object sender, RoutedEventArgs e)
-            => _dataExchangeViewModel.SendData();
+        private void Button_Send_Click(object sender, RoutedEventArgs e) => 
+            _dataExchangeViewModel.SendData();
 
-        private void Button_Clear_Click(object sender, RoutedEventArgs e)
-            => _dataExchangeViewModel.ClearOutput();
+        private void Button_Clear_Click(object sender, RoutedEventArgs e) => 
+            _dataExchangeViewModel.ClearOutput();
     }
 }
