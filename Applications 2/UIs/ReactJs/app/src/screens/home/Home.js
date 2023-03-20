@@ -34,9 +34,7 @@ export default function Home() {
                     setSelectedDevice(broadcastTag)
                 setDeviceList([broadcastTag, ...newDeviceList])
             })         
-            socket.on("input", (data) => {
-                setOutput((prevOuput) => prevOuput + data + "\n") 
-            })   
+            socket.on("input", (data) => addOutputToTextarea(data))   
         });
 
         const connectAndRegisterListener = () => {   
@@ -46,7 +44,21 @@ export default function Home() {
         return () => {
             socket.off("connect", connectAndRegisterListener)
         };
-    }, [setSelectedDevice, setDeviceList, setOutput, selectedDevice]);
+    }, [setSelectedDevice, setDeviceList, selectedDevice]);
+
+    function addOutputToTextarea(data) {
+        const separator = "\n"
+        setOutput((prevOuput) => {
+            let splitedPrevOutput = prevOuput === "" ? [] : prevOuput.split(separator)
+
+            if(splitedPrevOutput.length > 10)
+                splitedPrevOutput.shift()
+            
+            splitedPrevOutput.push(data)
+
+            return splitedPrevOutput.join(separator)
+        })  
+    }
 
     function sendData()  {
         if(selectedDevice === broadcastTag)
