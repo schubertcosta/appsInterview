@@ -35,6 +35,10 @@ export default function Home() {
                 setDeviceList([broadcastTag, ...newDeviceList])
             })         
             socket.on("input", (data) => addOutputToTextarea(data))   
+
+            socket.on('disconnect', (reason) => {
+                socket.disconnect()
+            });
         });
 
         const connectAndRegisterListener = () => {   

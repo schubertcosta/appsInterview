@@ -9,36 +9,41 @@ const io = require('socket.io')(server, {
 
 const sockets = [];
 const leaderSockets = []
+let counter = 0
+const deviceAlias = []
 
 io.on('connection', socket => {
     
     console.log('New socket connection:', socket.id);
 
-    socket.on('leader', message => {
-        console.log("--> Leader added:", message)
+    socket.on('leader', name => {
+        console.log("--> Leader added:", name)
+        addAlias(socket.id, name)
         leaderSockets.push(socket)
         sendDeviceIdList()
     })
 
-    socket.on('follower', message => {
-        console.log("--> Follower added:", message)
+    socket.on('follower', name => {
+        console.log("--> Follower added:", name)
+        addAlias(socket.id, name)
         sockets.push(socket)
         sendDeviceIdList()
     })
 
     socket.on('broadcast', message => {
-        sockets.forEach(s => s.emit('input', message));
+        sockets.forEach(s => logTranmission(s, socket.id, message))
         console.log("Broadcast message sent ->", message)
     });
 
     socket.on('broadcastLeader', message => {
-        leaderSockets.forEach(m => m.emit("input", message))
+        leaderSockets.forEach(m => logTranmission(m, socket.id, message))
         console.log("Broadcast message sent to leaders ->", message)
     })
 
     socket.on('unicast', dto => {
-        foundSocket = sockets.find(s => s.id === dto.target)
-        foundSocket.emit("input", dto.message)
+        const targetSocketId = Object.keys(deviceAlias).find(key => deviceAlias[key] == dto.target)
+        foundSocket = sockets.find(s => s.id === targetSocketId)
+        logTranmission(foundSocket, socket.id, dto.message)
     })
 
     socket.on('disconnect', () => {
@@ -50,14 +55,25 @@ io.on('connection', socket => {
             index = sockets.indexOf(leaderSockets);
             leaderSockets.splice(index, 1);
         }
-        socket.disconnect()
+        
+        delete deviceAlias[socket.id];
         console.log('Socket disconnected:', socket.id);
+        socket.disconnect()
     });
 
 });
 
+function logTranmission(targetSocket, srcId, message) {
+    return targetSocket.emit("input", "from: " + deviceAlias[srcId] + " received: " + message)
+}
+
+function addAlias(id, alias) {
+    deviceAlias[id] = alias + " #ID " + counter
+    counter += 1
+}
+
 function sendDeviceIdList() {    
-    let socketIds = sockets.map(socketItem => socketItem.id)
+    let socketIds = sockets.map(socketItem => deviceAlias[socketItem.id])
     leaderSockets.forEach(m => m.emit("deviceList", socketIds))
 }
 
