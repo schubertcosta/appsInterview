@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import TextareaCustom from '../../components/textareaCustom/TextareaCustom';
-import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { FormControl, MenuItem } from '@mui/material';
 import Select from '@mui/material/Select';
 import { socket } from '../../service/socket';
 
@@ -28,23 +28,33 @@ export default function Home() {
     const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
 
     useEffect(() => {
-        socket.emit('HELLO_THERE');
+        socket.on("connect", function() {    
+            socket.on("deviceList", (newDeviceList) => {
+                if(!newDeviceList.includes(selectedDevice))
+                    setSelectedDevice(broadcastTag)
+                setDeviceList([broadcastTag, ...newDeviceList])
+            })         
+            socket.on("input", (data) => {
+                setOutput((prevOuput) => prevOuput + data + "\n") 
+            })   
+        });
 
         const connectAndRegisterListener = () => {   
             socket.emit("leader", "ReactJs - Application 2")
         }
-        socket.on("connect", function() {    
-            socket.on("deviceList", (deviceList) => setDeviceList([broadcastTag, ...deviceList]))         
-        });
-        socket.on("connect", connectAndRegisterListener)
+        socket.on("connect", connectAndRegisterListener)        
         return () => {
             socket.off("connect", connectAndRegisterListener)
         };
-    }, []);
-
+    }, [setSelectedDevice, setDeviceList, setOutput, selectedDevice]);
 
     function sendData()  {
-        socket.emit(selectedDevice.toLowerCase(), textAreaValue)
+        if(selectedDevice === broadcastTag)
+            socket.emit(broadcastTag.toLowerCase(), textAreaValue)
+        else {
+            const dto = { target: selectedDevice, message: textAreaValue }
+            socket.emit("unicast", dto)
+        }        
     }   
 
     function SelectDevice() {
@@ -93,7 +103,7 @@ export default function Home() {
                         <TextareaCustom 
                             customButton = { 
                                 <CustomButton 
-                                    action = ""
+                                    action = {() => setOutput("")}
                                     buttonText = "Clear" 
                                     variant="outlined" /> }
                             title = "Output"

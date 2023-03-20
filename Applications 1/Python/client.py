@@ -4,6 +4,8 @@ SERVER_URL = "http://localhost:3001"
 
 
 sio = socketio.Client()
+count = 0
+
 
 @sio.event
 def connect():
@@ -16,7 +18,10 @@ def disconnect():
 
 @sio.on('input')
 def on_message(data):
+    global count
     print('I received a message! 2')
+    sio.emit("broadcastLeader", "mymessage - " + str(count) )
+    count = count+ 1
 
 
 def main():

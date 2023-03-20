@@ -8,7 +8,7 @@ const io = require('socket.io')(server, {
 });
 
 const sockets = [];
-const masterSockets = []
+const leaderSockets = []
 
 io.on('connection', socket => {
     
@@ -16,7 +16,7 @@ io.on('connection', socket => {
 
     socket.on('leader', message => {
         console.log("--> Leader added:", message)
-        masterSockets.push(socket)
+        leaderSockets.push(socket)
         sendDeviceIdList()
     })
 
@@ -27,15 +27,18 @@ io.on('connection', socket => {
     })
 
     socket.on('broadcast', message => {
-        sockets.forEach(s => {
-            s.emit('input', message)
-        });
+        sockets.forEach(s => s.emit('input', message));
         console.log("Broadcast message sent ->", message)
     });
 
+    socket.on('broadcastLeader', message => {
+        leaderSockets.forEach(m => m.emit("input", message))
+        console.log("Broadcast message sent to leaders ->", message)
+    })
+
     socket.on('unicast', dto => {
         foundSocket = sockets.find(s => s.id === dto.target)
-        foundSocket.emit(dto.message)
+        foundSocket.emit("input", dto.message)
     })
 
     socket.on('disconnect', () => {
@@ -44,8 +47,8 @@ io.on('connection', socket => {
             sockets.splice(index, 1);
             sendDeviceIdList()
         } else {
-            index = sockets.indexOf(masterSockets);
-            masterSockets.splice(index, 1);
+            index = sockets.indexOf(leaderSockets);
+            leaderSockets.splice(index, 1);
         }
         socket.disconnect()
         console.log('Socket disconnected:', socket.id);
@@ -55,7 +58,7 @@ io.on('connection', socket => {
 
 function sendDeviceIdList() {    
     let socketIds = sockets.map(socketItem => socketItem.id)
-    masterSockets.forEach(m => m.emit("deviceList", socketIds))
+    leaderSockets.forEach(m => m.emit("deviceList", socketIds))
 }
 
 const port = process.env.PORT || 3001;
