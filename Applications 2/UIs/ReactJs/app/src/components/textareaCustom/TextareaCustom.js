@@ -5,7 +5,14 @@ import FormLabel from '@mui/joy/FormLabel';
 import Textarea from '@mui/joy/Textarea';
 
 export default function TextareaCustom(props)  {
-  const { customButton, title, isReadOnly, minQtyRows, output, onChange } =  props
+  const { 
+    customButton, 
+    title, 
+    isReadOnly, 
+    minQtyRows, 
+    output, 
+    onChange,
+    selectDevice } =  props
 
   return (
     <FormControl>
@@ -25,6 +32,7 @@ export default function TextareaCustom(props)  {
               flex: 'auto',
             }}
           >
+            {selectDevice}
             {customButton}
           </Box>
         }

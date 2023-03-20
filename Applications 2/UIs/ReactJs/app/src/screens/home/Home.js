@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,45 +7,58 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import TextareaCustom from '../../components/textareaCustom/TextareaCustom';
-import socketIOClient from "socket.io-client";
+import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import Select from '@mui/material/Select';
+import { socket } from '../../service/socket';
 
-const ENDPOINT = "http://127.0.0.1:3001";
-const socket = socketIOClient(ENDPOINT);
-socket.on("connect", function(data) {
-    socket.emit("master", "ReactJs - Application 2")
-});
+const broadcastTag = "Broadcast"
 
 function CustomButton(props) {
     let { action, buttonText, variant } = props
     return <Button 
         variant={variant ?? "contained"} 
         sx={{ ml: 'auto' }}
-        onClick = {() => action()}
-        >{buttonText}</Button>
+        onClick = {() => action()}>{buttonText}</Button>
 }
 
 export default function Home() {
-    const [output, setOutput] = React.useState("");
-    const [textAreaValue, setTextAreaValue] = React.useState("");
+    const [output, setOutput] = useState("");
+    const [textAreaValue, setTextAreaValue] = useState("");
+    const [deviceList, setDeviceList] = useState([broadcastTag])
+    const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
 
+    useEffect(() => {
+        socket.emit('HELLO_THERE');
 
-    React.useEffect(() => {        
-        // socket.on('message', message => {
-        //     console.log(`Received message from ${socket.id}: ${message}`);
-            
-        //     // Broadcast the message to all connected sockets
-        //     sockets.forEach(s => s.emit('message', message));
-        // });
-        // socket.on("connect", function(data) {
-
-        //     // socket.emit("message", "uhul")
-        // });
+        const connectAndRegisterListener = () => {   
+            socket.emit("leader", "ReactJs - Application 2")
+        }
+        socket.on("connect", function() {    
+            socket.on("deviceList", (deviceList) => setDeviceList([broadcastTag, ...deviceList]))         
+        });
+        socket.on("connect", connectAndRegisterListener)
+        return () => {
+            socket.off("connect", connectAndRegisterListener)
+        };
     }, []);
 
+
     function sendData()  {
-        socket.emit("broadcast", textAreaValue)
-        console.log(textAreaValue)
+        socket.emit(selectedDevice.toLowerCase(), textAreaValue)
     }   
+
+    function SelectDevice() {
+        return (<Box sx={{ minWidth: 250 }} >
+            <FormControl>
+                <Select
+                    value={selectedDevice}
+                    onChange={(e) => setSelectedDevice(e.target.value)}    
+                >
+                    {deviceList.map(device => <MenuItem key={device} value={device}>{device}</MenuItem>)}
+                </Select>
+            </FormControl>
+        </Box>)
+    }
 
     return (
         <div>
@@ -71,6 +84,7 @@ export default function Home() {
                                 <CustomButton 
                                     action = {() => sendData()}
                                     buttonText = "Send" /> }
+                            selectDevice = {<SelectDevice />}
                             title = "Input" 
                             value = {textAreaValue}
                             onChange = {data => setTextAreaValue(data)}
