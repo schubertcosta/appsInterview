@@ -11,4 +11,8 @@
     <PackageReference Include="SocketIOClient" Version="3.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
 </Project>
