@@ -1,0 +1,25 @@
+version: '3'
+services:
+   mqtt-client:
+      build: ./MQTT/Client
+      command: python3 -u ./client.py
+      networks:
+         - mqtt
+   mosquitto-broker:
+      image: eclipse-mosquitto:2
+      volumes:
+         - ./MQTT/Broker/config/:/mosquitto/config/
+         - ./MQTT/Broker/log/:/mosquitto/log/
+         - ./MQTT/Broker/data/:/mosquitto/data/
+      # stdin_open: true # docker run -i
+      # tty: true        # docker run -t
+      ports:
+         - 1883:1883
+         - 9001:9001
+      networks:
+         - mqtt
+networks:
+   mqtt:
+      name: mqtt-network
+volumes:
+  data: ~
