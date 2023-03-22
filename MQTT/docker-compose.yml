@@ -1,0 +1,27 @@
+version: '3'
+services:
+   # client bot to simulate multiple communication
+   mqtt-client:
+      build: ./Client
+      command: python3 -u ./client_bot.py
+      networks:
+         - mqtt
+      deploy:
+         replicas: 3
+   mosquitto-broker:
+      image: eclipse-mosquitto:2
+      volumes:
+         - ./Broker/config/:/mosquitto/config/
+         - ./Broker/log/:/mosquitto/log/
+         - ./Broker/data/:/mosquitto/data/
+      ports:
+         - 1883:1883
+         - 9001:9001
+      networks:
+         - mqtt
+networks:
+   mqtt:
+      name: mqtt-network
+      driver: bridge
+volumes:
+  data: ~
