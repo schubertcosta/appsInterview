@@ -8,6 +8,8 @@ services:
          - mqtt
       deploy:
          replicas: 3
+      environment:
+         - SUBTOPIC=bot/topic
    mosquitto-broker:
       image: eclipse-mosquitto:2
       volumes:
