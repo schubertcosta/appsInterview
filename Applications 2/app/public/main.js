@@ -10,7 +10,7 @@ function createWindow () {
     }
   })
 
-  win.removeMenu()
+  // win.removeMenu()
   //load the index.html from a url
   win.loadURL('http://localhost:3000');
 
