@@ -60,4 +60,5 @@ The application shows how the multicast communication works for fake IoT devices
 - In the folder "MQTT", run:
     - `docker-compose build`
     - `docker-compose up`
-- Now you can also start the client running the command: `python ./Client/client.py`
+- Now you also need to install the client dependencies to exchange data with the IoT fake devices, running: `pip install -r ./Client/requirements.txt` 
+- Then, start the client running the command: `python ./Client/client.py`
