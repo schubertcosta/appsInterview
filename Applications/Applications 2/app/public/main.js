@@ -1,4 +1,6 @@
 const { app, BrowserWindow } = require('electron')
+const path = require("path");
+const url = require('url');
 
 function createWindow () {
   // Create the browser window.
@@ -13,6 +15,11 @@ function createWindow () {
   // win.removeMenu()
   //load the index.html from a url
   win.loadURL('http://localhost:3000');
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, 'index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }));
 
 }
 

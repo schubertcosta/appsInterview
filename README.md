@@ -1,6 +1,6 @@
 # Communication between devices and applications
 
-The goals of the following the following approaches were to show the communication between two applications using socket io protocol (Application Communication) and the communication between devices considering the IoT environment (MQTT Communication).
+The goals of the following approaches are to show the communication between two applications using socket io protocol (Application Communication) and the communication between devices considering the IoT environment (MQTT Communication).
 
 ## Technologies
 - Node v18.14.0
@@ -13,33 +13,26 @@ The goals of the following the following approaches were to show the communicati
 - Docker Compose v2.15.1
 - Python v3.8.8
 - Mosquitto (MQTT) v2.0.15
+- Visual Studio 2019
 
 # Approach 1: Application Communication
-The following approach will allow the user to perform communication between two applications. Application 1 and Application 2 are able to communicate between each other. Instances of Application 1 can perform unicast/broadcast communication with instances of Application 2, but instances of Application 2 can only broadcast data to all instances of Application 1. For allowing this communication happen, there is a node server hosting which connect all clients.
+This approach will allow the user to perform communication between two applications. Application 1 and Application 2 are able to communicate between each other. Instances of Application 2 can perform unicast/broadcast communication with instances of Application 1, but instances of Application 1 can only broadcast data to all instances of Application 2. There is a node server hosting the server to allow the communications between the applications.
 
 ## How to run
 ### Setup
-- Make sure that you have the following applications installed:
+- Clone or download the repo to your Windows machine
+- The simplest approach for running the applications is using Docker + Compose for running the project. Go to the folder "Applications" and run in a terminal:
+    - `docker-compose build`
+    - `docker-compose up`
+- Make sure that you have the following items installed if you want to run the applications in the debug mode:
     - Node
-    - Visual Studio (debug)
-- Clone or download the repo to your windows
+    - Visual Studio 2019
 
 ### Server
 - Open a terminal in the folder "Server" and run the command `npm install`
 - After it finishes. Run the command `node server.js`
 
 ### Application 2
-#### Release
-#### Nodejs + Electron
-
-
-
-
-
-
-
-
-
 #### Debug
 ##### Nodejs + Electron
 - Run `npm install`
@@ -53,10 +46,18 @@ The following approach will allow the user to perform communication between two 
 ### Application 1
 #### Release
 - Go to path "Releases Application/Application 1" and then open the file "Application 1.exe" 
+- You can open as many instances as you want for communicating with Application 1
 #### Debug
-- Go to folder "Application 1" and open "AppInterview.sln"
+- Go to folder "Application 1" and open "AppInterview.sln" with Visual Studio 2019
 - Run the application
 
+
 # Approach 2: MQTT Communication
-# 
-powershell docker-compose build & docker-compose up && powershell python ./Client/client.py
+The application shows how the multicast communication works for fake IoT devices (bots). The python client is the only one you can control, and all the other clients (bots) listening the topic subscribed will respond every time it receives a message.
+
+### Setup
+- Make sure that you have docker and python installed on your machine and.
+- In the folder "MQTT", run:
+    - `docker-compose build`
+    - `docker-compose up`
+- Now you can also start the client running the command: `python ./Client/client.py`
