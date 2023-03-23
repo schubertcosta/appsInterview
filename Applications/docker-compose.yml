@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  # client bot to simulate multiple communication
+  node-server:
+    build: ./Server
+    command: node ./server.js
+    ports:
+        - 3001:3001       
+  react-client:
+    build: ./Applications 2/app/
+    ports:
+      - 3000:3000

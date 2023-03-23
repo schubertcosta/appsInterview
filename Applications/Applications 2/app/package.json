@@ -1,0 +1,68 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demonstrating the communication between two applications.",
+  "main": "public/main.js",
+  "author": "Felipe Schubert",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.11",
+    "@mui/joy": "^5.0.0-alpha.71",
+    "@mui/material": "^5.11.13",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "cross-env": "^7.0.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "env-cmd": "^10.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start-electron": "concurrently \"npm run start-silent\" \"electron-forge start\"",
+    "start-silent": "env-cmd -f .env.electron react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron": "electron --trace-warnings .",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.5",
+    "@electron-forge/maker-deb": "^6.0.5",
+    "@electron-forge/maker-rpm": "^6.0.5",
+    "@electron-forge/maker-squirrel": "^6.0.5",
+    "@electron-forge/maker-zip": "^6.0.5",
+    "concurrently": "^7.6.0",
+    "electron": "^23.1.4",
+    "react-router-dom": "^6.9.0"
+  }
+}
